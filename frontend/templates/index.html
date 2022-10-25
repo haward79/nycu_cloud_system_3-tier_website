@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}" />
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+        <title>Home - My App</title>
+    </head>
+
+    <body>
+
+        <section>
+            <h1>All comments</h1>
+
+            <p><span id="text_numComments"></span> comment(s) from database.</p>
+
+            <div id="container_comments"></div>
+        </section>
+
+        <section>
+            <h1>Add a comment</h1>
+
+            <form>
+                <textarea id="textarea_comment" placeholder="Input some comment"></textarea>
+                <br />
+                <button id="button_addComment" type="button">Send</button>
+            </form>
+        </section>
+
+    </body>
+</html>

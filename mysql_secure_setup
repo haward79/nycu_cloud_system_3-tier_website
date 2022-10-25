@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Make sure that NOBODY can access the server without a password.
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '1Cilakg26cnAb3NVtRAS';"
+
+# Create new user.
+mysql -e "CREATE USER 'dbuser'@'%' IDENTIFIED BY 'nycu_ai';"
+
+# Grant privileges for new user.
+mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@'%';"
+
+# Make our changes take effect.
+mysql -e "FLUSH PRIVILEGES;"
+
+
+
+# Create database for web.
+mysql -u dbuser -pnycu_ai -e "CREATE DATABASE web;"
+
+# Create table for web.
+mysql -u dbuser -pnycu_ai -e "USE web; CREATE TABLE comments (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, data text);"
+
+
+
+# Edit mysqld settings.
+sed -i 's/^bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# Restart mysqld.
+service mysql restart

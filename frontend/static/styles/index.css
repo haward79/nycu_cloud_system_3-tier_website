@@ -1,0 +1,58 @@
+@charset "utf-8";
+
+*
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    margin: 0px auto;
+    padding: 50px 3%;
+    width: 960px;
+}
+
+section
+{
+    margin: 0px 0px 50px;
+}
+
+h1
+{
+    margin: 0px 0px 10px;
+}
+
+textarea
+{
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 50%;
+    height: 100px;
+}
+
+.block_comment
+{
+    margin: 0px 0px 10px;
+    padding: 10px;
+    background-color: #00000020;
+    border-radius: 10px 10px 0px 10px;
+}
+
+.block_comment p
+{
+    margin: 0px;
+}
+
+@media (max-width: 960px)
+{
+    body
+    {
+        padding: 50px 5%;
+        width: 100%;
+    }
+
+    textarea
+    {
+        width: 100%;
+    }
+}
