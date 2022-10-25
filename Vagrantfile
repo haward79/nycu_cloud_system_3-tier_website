@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     mysql.vm.network "private_network", ip: "192.168.56.4"
     mysql.vm.provision "shell", inline: "apt update; apt install -y mysql-server"
     mysql.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
-    mysql.vm.provision "shell", inline: "cd /Workspace; chmod u+x mysql_secure_setup; ./mysql_secure_setup"
+    mysql.vm.provision "shell", inline: "cd /Workspace/nycu_cloud_system_3-tier_website; chmod u+x mysql_secure_setup; ./mysql_secure_setup"
   end
   
   config.vm.define "backend" do |backend|
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     backend.vm.network "private_network", ip: "192.168.56.3"
     backend.vm.provision "shell", inline: "apt update; apt install -y python3-pip; pip install -U Flask flask-cors mysql-connector-python"
     backend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
-    backend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace; flask --app main --debug run --host=0.0.0.0'", run: 'always'
+    backend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace/nycu_cloud_system_3-tier_website; flask --app main --debug run --host=0.0.0.0'", run: 'always'
   end
   
   config.vm.define "frontend" do |frontend|
@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
     frontend.vm.network "private_network", ip: "192.168.56.2"
     frontend.vm.provision "shell", inline: "apt update; apt install -y python3-pip; pip install -U Flask"
     frontend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
-    frontend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace; flask --app main --debug run --host=0.0.0.0'", run: 'always'
+    frontend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace/nycu_cloud_system_3-tier_website; flask --app main --debug run --host=0.0.0.0'", run: 'always'
   end
 
   # Disable automatic box update checking. If you disable this, then
