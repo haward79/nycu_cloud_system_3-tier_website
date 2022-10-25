@@ -25,7 +25,6 @@ Vagrant.configure("2") do |config|
     backend.vm.box = "generic/ubuntu2004"
     backend.vm.hostname = "backend"
     backend.vm.network "private_network", ip: "192.168.56.3"
-    backend.vm.synced_folder "backend", "/Workspace"
     backend.vm.provision "shell", inline: "apt update; apt install -y python3-pip; pip install -U Flask flask-cors mysql-connector-python"
     backend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
     backend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace; flask --app main --debug run --host=0.0.0.0'", run: 'always'
@@ -35,7 +34,6 @@ Vagrant.configure("2") do |config|
     frontend.vm.box = "generic/ubuntu2004"
     frontend.vm.hostname = "frontend"
     frontend.vm.network "private_network", ip: "192.168.56.2"
-    frontend.vm.synced_folder "frontend", "/Workspace"
     frontend.vm.provision "shell", inline: "apt update; apt install -y python3-pip; pip install -U Flask"
     frontend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
     frontend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace; flask --app main --debug run --host=0.0.0.0'", run: 'always'
