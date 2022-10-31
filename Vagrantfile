@@ -12,6 +12,19 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
+  config.vm.define "fserver" do |fserver|
+    fserver.vm.box = "generic/ubuntu1804"
+    fserver.vm.hostname = "fserver"
+    fserver.vm.network "private_network", ip: "192.168.56.5"
+    fserver.vm.provision "shell", inline: "mkdir -p /Workspace /Workspace/data; cd /Workspace; wget -q https://dl.min.io/server/minio/release/linux-amd64/minio; chmod u+x minio"
+    fserver.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace; export MINIO_ROOT_USER=fuser; export MINIO_ROOT_PASSWORD=h38KGSCII9YASmRy5zjq; ./minio server /Workspace/data --console-address \":9001\" --address \":9002\"'", run: 'always'
+    fserver.vm.provision "shell", inline: "cd /Workspace; wget -q https://dl.min.io/client/mc/release/linux-amd64/mc; chmod u+x mc; ./mc alias set fserver http://192.168.56.5:9002/ fuser h38KGSCII9YASmRy5zjq"
+    fserver.vm.provision "shell", inline: "cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
+    fserver.vm.provision "shell", inline: "cd /Workspace; ./mc mb fserver/frontend; ./mc mirror /Workspace/nycu_cloud_system_3-tier_website/frontend fserver/frontend"
+    fserver.vm.provision "shell", inline: "cd /Workspace; ./mc mb fserver/public; ./mc mirror /Workspace/nycu_cloud_system_3-tier_website/frontend/static/ fserver/public; ./mc anonymous set download fserver/public"
+    fserver.vm.provision "shell", inline: "rm -r /Workspace/nycu_cloud_system_3-tier_website"
+  end
+  
   config.vm.define "mysql" do |mysql|
     mysql.vm.box = "generic/ubuntu2004"
     mysql.vm.hostname = "mysql"
@@ -35,7 +48,9 @@ Vagrant.configure("2") do |config|
     frontend.vm.hostname = "frontend"
     frontend.vm.network "private_network", ip: "192.168.56.2"
     frontend.vm.provision "shell", inline: "apt update; apt install -y python3-pip; pip install -U Flask"
-    frontend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace; git clone https://github.com/haward79/nycu_cloud_system_3-tier_website.git"
+    frontend.vm.provision "shell", inline: "mkdir -p /Workspace; cd /Workspace"
+    frontend.vm.provision "shell", inline: "cd /Workspace; wget -q https://dl.min.io/client/mc/release/linux-amd64/mc; chmod u+x mc; bash +o history; ./mc alias set fserver http://192.168.56.5:9002/ fuser h38KGSCII9YASmRy5zjq; bash -o history"
+    frontend.vm.provision "shell", inline: "cd /Workspace; ./mc cp --recursive fserver/frontend /Workspace/nycu_cloud_system_3-tier_website; rm -r /Workspace/nycu_cloud_system_3-tier_website/frontend/static"
     frontend.vm.provision "shell", inline: "screen -dm bash -c 'cd /Workspace/nycu_cloud_system_3-tier_website/frontend; flask --app main --debug run --host=0.0.0.0'", run: 'always'
   end
 
